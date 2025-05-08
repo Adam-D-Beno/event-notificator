@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Getter
-public class EventChangeNotificationEntity {
+public class EventNotificationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,48 +35,52 @@ public class EventChangeNotificationEntity {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "oldValue", column = @Column(name = "old_name", nullable = false)),
-            @AttributeOverride(name = "newValue", column = @Column(name = "new_name", nullable = false))
+            @AttributeOverride(name = "oldValue", column = @Column(name = "old_name")),
+            @AttributeOverride(name = "newValue", column = @Column(name = "new_name"))
     })
     private EventFieldChange<String> name;
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "oldValue", column = @Column(name = "old_maxPlaces", nullable = false)),
-            @AttributeOverride(name = "newValue", column = @Column(name = "new_maxPlaces", nullable = false))
+            @AttributeOverride(name = "oldValue", column = @Column(name = "old_maxPlaces")),
+            @AttributeOverride(name = "newValue", column = @Column(name = "new_maxPlaces"))
     })
     private EventFieldChange<Integer> maxPlaces;
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "oldValue", column = @Column(name = "old_date_event", nullable = false)),
-            @AttributeOverride(name = "newValue", column = @Column(name = "new_date_event", nullable = false))
+            @AttributeOverride(name = "oldValue", column = @Column(name = "old_date_event")),
+            @AttributeOverride(name = "newValue", column = @Column(name = "new_date_event"))
     })
     private EventFieldChange<LocalDateTime> date;
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "oldValue", column = @Column(name = "old_cost", nullable = false)),
-            @AttributeOverride(name = "newValue", column = @Column(name = "new_cost", nullable = false))
+            @AttributeOverride(name = "oldValue", column = @Column(name = "old_cost")),
+            @AttributeOverride(name = "newValue", column = @Column(name = "new_cost"))
     })
     private EventFieldChange<BigDecimal> cost;
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "oldValue", column = @Column(name = "old_duration", nullable = false)),
-            @AttributeOverride(name = "newValue", column = @Column(name = "new_duration", nullable = false))
+            @AttributeOverride(name = "oldValue", column = @Column(name = "old_duration")),
+            @AttributeOverride(name = "newValue", column = @Column(name = "new_duration"))
     })
     private EventFieldChange<Integer> duration;
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "oldValue", column = @Column(name = "old_locationId", nullable = false)),
-            @AttributeOverride(name = "newValue", column = @Column(name = "new_locationId", nullable = false))
+            @AttributeOverride(name = "oldValue", column = @Column(name = "old_locationId")),
+            @AttributeOverride(name = "newValue", column = @Column(name = "new_locationId"))
     })
     private EventFieldChange<Long> locationId;
 
-    @Column(name = "Event_status")
-    private EventStatus status;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "oldValue", column = @Column(name = "old_event_status")),
+            @AttributeOverride(name = "newValue", column = @Column(name = "new_event_status"))
+    })
+    private EventFieldChange<EventStatus> status;
 
     @Column(name = "users")
     List<Long> userRegistrationsOnEvent;
