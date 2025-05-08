@@ -22,23 +22,39 @@ public class NotificationsService {
 
     public void save(EventChangeKafkaMessage kafkaMessage) {
         log.info("Begin to save kafka message in DB");
-        EventNotificationEntity eventNotificationEntityToSave = new EventNotificationEntity(
-                null,
-                kafkaMessage.eventId(),
-                kafkaMessage.userEventChangedId(),
-                kafkaMessage.ownerEventId(),
-                new EventFieldChange<>(kafkaMessage.name().getOldValue(), kafkaMessage.name().getNewValue()),
-                new EventFieldChange<>(kafkaMessage.MaxPlaces().getOldValue(), kafkaMessage.MaxPlaces().getNewValue()),
-                new EventFieldChange<>(kafkaMessage.date().getOldValue(), kafkaMessage.date().getNewValue()),
-                new EventFieldChange<>(kafkaMessage.cost().getOldValue(), kafkaMessage.cost().getNewValue()),
-                new EventFieldChange<>(kafkaMessage.duration().getOldValue(), kafkaMessage.duration().getNewValue()),
-                new EventFieldChange<>(kafkaMessage.locationId().getOldValue(), kafkaMessage.locationId().getNewValue()),
-                new EventFieldChange<>(kafkaMessage.status().getOldValue(), kafkaMessage.status().getNewValue()),
-                kafkaMessage.userRegistrationsOnEvent(),
-                false,
-                LocalDateTime.now());
+//        EventNotificationEntity eventNotificationEntityToSave = new EventNotificationEntity(
+//                null,
+//                kafkaMessage.eventId(),
+//                kafkaMessage.userEventChangedId(),
+//                kafkaMessage.ownerEventId(),
+//                new EventFieldChange<>(kafkaMessage.name().getOldValue(), kafkaMessage.name().getNewValue()),
+//                new EventFieldChange<>(kafkaMessage.MaxPlaces().getOldValue(), kafkaMessage.MaxPlaces().getNewValue()),
+//                new EventFieldChange<>(kafkaMessage.date().getOldValue(), kafkaMessage.date().getNewValue()),
+//                new EventFieldChange<>(kafkaMessage.cost().getOldValue(), kafkaMessage.cost().getNewValue()),
+//                new EventFieldChange<>(kafkaMessage.duration().getOldValue(), kafkaMessage.duration().getNewValue()),
+//                new EventFieldChange<>(kafkaMessage.locationId().getOldValue(), kafkaMessage.locationId().getNewValue()),
+//                new EventFieldChange<>(kafkaMessage.status().getOldValue(), kafkaMessage.status().getNewValue()),
+//                kafkaMessage.userRegistrationsOnEvent(),
+//                false,
+//                LocalDateTime.now());
 
-        notificationRepository.save(eventNotificationEntityToSave);
+        notificationRepository.save(
+                EventNotificationEntity.builder()
+                        .eventId(kafkaMessage.eventId())
+                        .userEventChangedId(kafkaMessage.userEventChangedId())
+                        .ownerEventId(kafkaMessage.ownerEventId())
+                        .name(kafkaMessage.name())
+                        .maxPlaces(kafkaMessage.MaxPlaces())
+                        .date(kafkaMessage.date())
+                        .cost(kafkaMessage.cost())
+                        .duration(kafkaMessage.duration())
+                        .locationId(kafkaMessage.locationId())
+                        .status(kafkaMessage.status())
+                        .userRegistrationsOnEvent(kafkaMessage.userRegistrationsOnEvent())
+                        .isRead(false)
+                        .notificationDate(LocalDateTime.now())
+                        .build()
+        );
         log.info("Saved kafka message in DB");
     }
 
