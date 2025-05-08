@@ -1,10 +1,7 @@
 package org.das.eventnotificator.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.das.eventnotificator.model.EventFieldChange;
 import org.das.eventnotificator.model.EventStatus;
 
@@ -18,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Getter
+@Builder
 public class EventNotificationEntity {
 
     @Id
