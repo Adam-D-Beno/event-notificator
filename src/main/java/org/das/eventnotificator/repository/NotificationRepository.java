@@ -15,7 +15,8 @@ public interface NotificationRepository extends JpaRepository<EventNotificationE
 
     @Query("""
     select en from EventNotificationEntity en
-        where en.userRegistrationsOnEvent in :userId
+        where :userId member of en.userRegistrationsOnEvent
+        AND en.isRead=false
     """)
     List<EventNotificationEntity> findAllNotReadyUserNotifications(@Param("userId") Long userId);
 
