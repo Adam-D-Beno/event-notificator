@@ -24,20 +24,19 @@ public class NotificationController {
     public ResponseEntity<List<EventChangeNotificationResponse>> findAllNotReadyNotifications() {
         log.info("Get request All Not Ready Notifications");
         List<EventNotification> notReadyUserNotifications = notificationsService.findAllNotReadyUserNotifications();
-        return ResponseEntity.ok(
-                notReadyUserNotifications
-                        .stream()
-                        .map(notification ->  EventChangeNotificationResponse.builder()
-                                .eventId(notification.eventId())
-                                .name(notification.name())
-                                .maxPlaces(notification.maxPlaces())
-                                .date(notification.date())
-                                .cost(notification.cost())
-                                .duration(notification.duration())
-                                .locationId(notification.locationId())
-                                .build()
-                        ).toList()
-        );
+        List<EventChangeNotificationResponse> response = notReadyUserNotifications
+                .stream()
+                .map(notification ->  EventChangeNotificationResponse.builder()
+                        .eventId(notification.eventId())
+                        .name(notification.name())
+                        .maxPlaces(notification.maxPlaces())
+                        .date(notification.date())
+                        .cost(notification.cost())
+                        .duration(notification.duration())
+                        .locationId(notification.locationId())
+                        .build()
+                ).toList();
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
