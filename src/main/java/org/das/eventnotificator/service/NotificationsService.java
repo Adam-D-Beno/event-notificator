@@ -3,7 +3,6 @@ package org.das.eventnotificator.service;
 import lombok.RequiredArgsConstructor;
 import org.das.eventnotificator.dto.NotificationRequest;
 import org.das.eventnotificator.model.EventChangeKafkaMessage;
-import org.das.eventnotificator.model.EventFieldChange;
 import org.das.eventnotificator.model.EventNotification;
 import org.das.eventnotificator.model.entity.EventNotificationEntity;
 import org.das.eventnotificator.repository.NotificationRepository;
