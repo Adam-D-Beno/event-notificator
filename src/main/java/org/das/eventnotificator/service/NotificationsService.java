@@ -67,6 +67,6 @@ public class NotificationsService {
     }
 
     public boolean markAllUserNotificationRead(NotificationRequest notificationRequest) {
-        return notificationRepository.marNotificationAsRead(notificationRequest.notificationIds()) > 0;
+        return notificationRepository.markNotificationAsRead(notificationRequest.notificationIds()) > 0;
     }
 }
