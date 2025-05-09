@@ -1,6 +1,6 @@
 package org.das.eventnotificator.repository;
 
-import org.das.eventnotificator.model.entity.EventNotificationEntity;
+import org.das.eventnotificator.model.entity.NotificationEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,23 +10,23 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface NotificationRepository extends JpaRepository<EventNotificationEntity, Long> {
+public interface NotificationRepository extends JpaRepository<NotificationEntity, Long> {
 
 
     @Query("""
-    select en from EventNotificationEntity en
+    select en from NotificationEntity en
         where :userId member of en.userRegistrationsOnEvent
-        AND en.isRead=false
+        AND en.isReady=false
     """)
-    List<EventNotificationEntity> findAllNotReadyUserNotifications(@Param("userId") Long userId);
+    List<NotificationEntity> findAllNotReadyUserNotifications(@Param("userId") Long userId);
 
     @Transactional
     @Modifying
     @Query("""
-        update EventNotificationEntity en
-        set en.isRead=true
+        update NotificationEntity en
+        set en.isReady=true
         where en.id in :notificationIds
-        AND en.isRead = false
+        AND en.isReady = false
     """)
     int markNotificationAsRead(@Param("notificationIds") List<Long> notificationIds);
 }

@@ -1,6 +1,5 @@
 package org.das.eventnotificator.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class EventFieldChange<T> {
+public class EventFieldGeneric<T> {
     T oldValue;
     T newValue;
 }

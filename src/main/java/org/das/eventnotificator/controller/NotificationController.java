@@ -1,9 +1,9 @@
 package org.das.eventnotificator.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.das.eventnotificator.dto.EventChangeNotificationResponse;
+import org.das.eventnotificator.dto.NotificationResponse;
 import org.das.eventnotificator.dto.NotificationRequest;
-import org.das.eventnotificator.model.EventNotification;
+import org.das.eventnotificator.model.Notification;
 import org.das.eventnotificator.service.NotificationsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +21,12 @@ public class NotificationController {
     private final NotificationsService notificationsService;
 
     @GetMapping
-    public ResponseEntity<List<EventChangeNotificationResponse>> findAllNotReadyNotifications() {
+    public ResponseEntity<List<NotificationResponse>> findAllNotReadyNotifications() {
         log.info("Get request All Not Ready Notifications");
-        List<EventNotification> notReadyUserNotifications = notificationsService.findAllNotReadyUserNotifications();
-        List<EventChangeNotificationResponse> response = notReadyUserNotifications
+        List<Notification> notReadyUserNotifications = notificationsService.findAllNotReadyUserNotifications();
+        List<NotificationResponse> response = notReadyUserNotifications
                 .stream()
-                .map(notification ->  EventChangeNotificationResponse.builder()
+                .map(notification ->  NotificationResponse.builder()
                         .eventId(notification.eventId())
                         .name(notification.name())
                         .maxPlaces(notification.maxPlaces())
