@@ -9,7 +9,7 @@ public record EventChangeKafkaMessage(
       Long modifierById,
       Long ownerEventId,
       EventFieldGeneric<String> name,
-      EventFieldGeneric<Integer> MaxPlaces,
+      EventFieldGeneric<Integer> maxPlaces,
       EventFieldGeneric<LocalDateTime> date,
       EventFieldGeneric<BigDecimal> cost,
       EventFieldGeneric<Integer> duration,

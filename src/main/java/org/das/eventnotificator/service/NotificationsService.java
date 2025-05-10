@@ -7,10 +7,13 @@ import org.das.eventnotificator.model.EventFieldsChange;
 import org.das.eventnotificator.model.Notification;
 import org.das.eventnotificator.model.entity.EventFieldsChangeEntity;
 import org.das.eventnotificator.model.entity.NotificationEntity;
+import org.das.eventnotificator.repository.EventFieldsChangeRepository;
 import org.das.eventnotificator.repository.NotificationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,10 +23,14 @@ public class NotificationsService {
 
     private static final Logger log = LoggerFactory.getLogger(NotificationsService.class);
     private final NotificationRepository notificationRepository;
+    private final EventFieldsChangeRepository  eventFieldsChangeRepository;
 
+    @Transactional
     public void save(EventChangeKafkaMessage kafkaMessage) {
         log.info("Begin to save notificationEntity");
-        notificationRepository.save(mapperToNotificationEntity(kafkaMessage));
+        NotificationEntity entityToSave = mapperToNotificationEntity(kafkaMessage);
+        eventFieldsChangeRepository.save(entityToSave.getEventFieldsChangeEntity());
+        notificationRepository.save(entityToSave);
         log.info("Saved kafka message in DB");
     }
 
@@ -31,7 +38,7 @@ public class NotificationsService {
         log.info("execute method findAllNotReadyUserNotifications in NotificationsService");
         List<NotificationEntity> notificationsEntity =
                 notificationRepository.findAllNotReadyUserNotifications(1L);
-        return mapperToNotifications(notificationsEntity);
+        return mapperToNotification(notificationsEntity);
     }
 
     public boolean markAllUserNotificationRead(NotificationRequest notificationRequest) {
@@ -39,6 +46,7 @@ public class NotificationsService {
     }
 
     private NotificationEntity mapperToNotificationEntity(EventChangeKafkaMessage kafkaMessage) {
+        log.info("Begin mapping kafkaMessage={} to NotificationEntity", kafkaMessage);
         return NotificationEntity.builder()
                 .eventId(kafkaMessage.eventId())
                 .modifierById(kafkaMessage.modifierById())
@@ -46,7 +54,7 @@ public class NotificationsService {
                 .eventFieldsChangeEntity(
                         EventFieldsChangeEntity.builder()
                                 .name(kafkaMessage.name())
-                                .maxPlaces(kafkaMessage.MaxPlaces())
+                                .maxPlaces(kafkaMessage.maxPlaces())
                                 .date(kafkaMessage.date())
                                 .cost(kafkaMessage.cost())
                                 .duration(kafkaMessage.duration())
@@ -60,7 +68,9 @@ public class NotificationsService {
                 .build();
     }
 
-    private List<Notification> mapperToNotifications(List<NotificationEntity> notificationsEntity) {
+    private List<Notification> mapperToNotification(List<NotificationEntity> notificationsEntity) {
+        log.info("Begin mapping list notificationEntities to list Notification, list size={}",
+                notificationsEntity.size());
         return notificationsEntity
                 .stream()
                 .map(notificationEntity -> Notification.builder()

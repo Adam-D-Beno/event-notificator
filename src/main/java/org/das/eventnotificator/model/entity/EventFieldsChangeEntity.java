@@ -4,10 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.das.eventnotificator.model.EventFieldGeneric;
 import org.das.eventnotificator.model.EventStatus;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -69,5 +67,6 @@ public class EventFieldsChangeEntity {
             @AttributeOverride(name = "oldValue", column = @Column(name = "old_status")),
             @AttributeOverride(name = "newValue", column = @Column(name = "new_status"))
     })
+    @Enumerated(EnumType.STRING)
     private EventFieldGeneric<EventStatus> status;
 }
