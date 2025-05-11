@@ -9,6 +9,7 @@ import org.das.eventnotificator.model.entity.EventFieldsChangeEntity;
 import org.das.eventnotificator.model.entity.NotificationEntity;
 import org.das.eventnotificator.repository.EventFieldsChangeRepository;
 import org.das.eventnotificator.repository.NotificationRepository;
+import org.das.eventnotificator.security.jwt.CustomUserDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -35,15 +36,22 @@ public class NotificationsService {
         log.info("Saved kafka message in DB");
     }
 
-    public List<Notification> findAllNotReadyUserNotifications() {
+    public List<Notification> findAllNotReadyUserNotifications(CustomUserDetail authUser) {
         log.info("execute method findAllNotReadyUserNotifications in NotificationsService");
         List<NotificationEntity> notificationsEntity =
-                notificationRepository.findAllNotReadyUserNotifications(1L);
+                notificationRepository.findAllNotReadyUserNotifications(authUser.getId());
         return mapperToNotification(notificationsEntity);
     }
 
-    public boolean markAllUserNotificationRead(NotificationRequest notificationRequest) {
-        return notificationRepository.markNotificationAsRead(notificationRequest.notificationIds()) > 0;
+    public boolean markAllUserNotificationRead(
+            NotificationRequest notificationRequest,
+            CustomUserDetail authUser
+    ) {
+        //todo throw 404
+        return notificationRepository.markNotificationAsRead(
+                notificationRequest.notificationIds(),
+                authUser.getId()
+                ) > 0;
     }
 
     private NotificationEntity mapperToNotificationEntity(EventChangeKafkaMessage kafkaMessage) {

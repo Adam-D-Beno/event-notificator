@@ -26,7 +26,11 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
         update NotificationEntity en
         set en.isReady=true
         where en.id in :notificationIds
+        AND :userId member of en.registrations
         AND en.isReady = false
     """)
-    int markNotificationAsRead(@Param("notificationIds") List<Long> notificationIds);
+    int markNotificationAsRead(
+            @Param("notificationIds") List<Long> notificationIds,
+            @Param("userId") Long userId
+    );
 }

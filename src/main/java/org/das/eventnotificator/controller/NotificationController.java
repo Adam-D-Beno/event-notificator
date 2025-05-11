@@ -31,11 +31,11 @@ public class NotificationController {
 
     @GetMapping
     public ResponseEntity<List<NotificationResponse>> findAllNotReadyNotifications(
-            @AuthenticationPrincipal CustomUserDetail customUserDetail
+            @AuthenticationPrincipal CustomUserDetail authUser
             ) {
         log.info("Get request All Not Ready Notifications");
         List<Notification> notReadyUserNotifications =
-                notificationsService.findAllNotReadyUserNotifications();
+                notificationsService.findAllNotReadyUserNotifications(authUser);
         List<NotificationResponse> response = notReadyUserNotifications
                 .stream()
                 .map(notification ->  NotificationResponse.builder()
@@ -53,10 +53,13 @@ public class NotificationController {
 
     @PostMapping
     public ResponseEntity<Void> markAllNotificationsAsRead(
-            @RequestBody NotificationRequest notificationRequest
+            @RequestBody NotificationRequest notificationRequest,
+            @AuthenticationPrincipal CustomUserDetail authUser
     ) {
         log.info("POST request Set All Notifications As Read");
-        boolean res = notificationsService.markAllUserNotificationRead(notificationRequest);
+        boolean res = notificationsService.markAllUserNotificationRead(
+                notificationRequest,
+                authUser);
         if (!res) {
             return ResponseEntity.notFound().build();
         }
