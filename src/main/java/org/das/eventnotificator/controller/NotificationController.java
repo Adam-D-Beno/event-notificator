@@ -7,10 +7,14 @@ import org.das.eventnotificator.model.EventChangeKafkaMessage;
 import org.das.eventnotificator.model.EventFieldGeneric;
 import org.das.eventnotificator.model.EventStatus;
 import org.das.eventnotificator.model.Notification;
+import org.das.eventnotificator.security.jwt.CustomUserDetail;
 import org.das.eventnotificator.service.NotificationsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -26,7 +30,9 @@ public class NotificationController {
     private final NotificationsService notificationsService;
 
     @GetMapping
-    public ResponseEntity<List<NotificationResponse>> findAllNotReadyNotifications() {
+    public ResponseEntity<List<NotificationResponse>> findAllNotReadyNotifications(
+            @AuthenticationPrincipal CustomUserDetail customUserDetail
+            ) {
         log.info("Get request All Not Ready Notifications");
         List<Notification> notReadyUserNotifications =
                 notificationsService.findAllNotReadyUserNotifications();
@@ -58,7 +64,9 @@ public class NotificationController {
     }
 
     @GetMapping("/test")
-    public ResponseEntity<String> test() {
+    public ResponseEntity<String> test(
+            @AuthenticationPrincipal CustomUserDetail customUserDetail
+    ) {
 //        EventChangeKafkaMessage changeKafkaMessage = EventChangeKafkaMessage.builder()
 //                .eventId(1L)
 //                .modifierById(1L)
@@ -73,6 +81,9 @@ public class NotificationController {
 //                .registrationsOnEvent(List.of(1L, 2L, 3L))
 //                .build();
 //        notificationsService.save(changeKafkaMessage);
+        log.info("ID пользователя={}, login={}, role={}",
+                customUserDetail.getId(),customUserDetail.getUsername(),
+                customUserDetail.getAuthorities().toString());
         return ResponseEntity.ok("Its work");
     }
 
