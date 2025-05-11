@@ -58,22 +58,22 @@ public class NotificationController {
     }
 
     @GetMapping("/test")
-    public ResponseEntity<Void> test() {
-        EventChangeKafkaMessage changeKafkaMessage = EventChangeKafkaMessage.builder()
-                .eventId(1L)
-                .modifierById(1L)
-                .ownerEventId(1L)
-                .name(new EventFieldGeneric<>("oldName", "newName"))
-                .maxPlaces(new EventFieldGeneric<>(10, 20))
-                .date(new EventFieldGeneric<>(LocalDateTime.now(), LocalDateTime.now()))
-                .cost(new EventFieldGeneric<>(BigDecimal.ONE, BigDecimal.TEN))
-                .duration(new EventFieldGeneric<>(10, 60))
-                .locationId(new EventFieldGeneric<>(8L, 10L))
-                .status(new EventFieldGeneric<>(EventStatus.WAIT_START, EventStatus.STARTED))
-                .registrationsOnEvent(List.of(1L, 2L, 3L))
-                .build();
-        notificationsService.save(changeKafkaMessage);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> test() {
+//        EventChangeKafkaMessage changeKafkaMessage = EventChangeKafkaMessage.builder()
+//                .eventId(1L)
+//                .modifierById(1L)
+//                .ownerEventId(1L)
+//                .name(new EventFieldGeneric<>("oldName", "newName"))
+//                .maxPlaces(new EventFieldGeneric<>(10, 20))
+//                .date(new EventFieldGeneric<>(LocalDateTime.now(), LocalDateTime.now()))
+//                .cost(new EventFieldGeneric<>(BigDecimal.ONE, BigDecimal.TEN))
+//                .duration(new EventFieldGeneric<>(10, 60))
+//                .locationId(new EventFieldGeneric<>(8L, 10L))
+//                .status(new EventFieldGeneric<>(EventStatus.WAIT_START, EventStatus.STARTED))
+//                .registrationsOnEvent(List.of(1L, 2L, 3L))
+//                .build();
+//        notificationsService.save(changeKafkaMessage);
+        return ResponseEntity.ok("Its work");
     }
 
 }

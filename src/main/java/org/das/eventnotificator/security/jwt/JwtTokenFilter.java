@@ -19,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -43,23 +44,26 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String jwt = authorizationHeader.substring(7);
         String userLogin;
         String userRole;
+        Long userId;
         try {
             userLogin = jwtTokenManager.getLoginFromToken(jwt);
             userRole = jwtTokenManager.getRoleFromToken(jwt);
+            userId = jwtTokenManager.getIdFromToken(jwt);
         } catch (Exception e) {
             LOGGER.error("Error while reading jwt", e);
             filterChain.doFilter(request,response);
             return;
         }
-        UserDetails userDetails = User.builder()
+        UserDetails customUserDetails = CustomUserDetail.builder()
+                .id(userId)
                 .username(userLogin)
-                .authorities(userRole)
+                .authorities(Collections.singleton(new SimpleGrantedAuthority(userRole)))
                 .build();
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                userDetails,
+                customUserDetails,
                 null,
-                userDetails.getAuthorities()
+                customUserDetails.getAuthorities()
         );
 
         addSecurityContextHolder(authenticationToken);
