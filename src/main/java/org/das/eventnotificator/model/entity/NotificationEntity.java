@@ -3,7 +3,9 @@ package org.das.eventnotificator.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @NoArgsConstructor
@@ -36,7 +38,7 @@ public class NotificationEntity {
     @CollectionTable(name = "event_registrations",
             joinColumns = @JoinColumn(name = "notification_id"),
             foreignKey = @ForeignKey(name = "fk_notification"))
-        private List<Long> registrationsOnEvent;
+    private Set<Long> registrations = new HashSet<>();
 
     @Column(name = "is_ready", nullable = false)
     private boolean isReady;

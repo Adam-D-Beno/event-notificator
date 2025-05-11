@@ -1,11 +1,13 @@
 package org.das.eventnotificator.exeption;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 
 public record ErrorMessageResponse(
-       String message,
-       String detailMessage,
-       LocalDateTime dateTime
+        String message,
+        String detailedMessage,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        LocalDateTime dateTime
 ) {
-
 }

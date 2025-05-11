@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -62,7 +63,7 @@ public class NotificationsService {
                                 .status(kafkaMessage.status())
                                 .build()
                 )
-                .registrationsOnEvent(kafkaMessage.registrationsOnEvent())
+                .registrations(new HashSet<>(kafkaMessage.registrationsOnEvent()))
                 .isReady(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -89,7 +90,7 @@ public class NotificationsService {
                                         .status(notificationEntity.getEventFieldsChangeEntity().getStatus())
                                         .build()
                         )
-                        .registrationsOnEvent(notificationEntity.getRegistrationsOnEvent())
+                        .registrationsOnEvent(notificationEntity.getRegistrations().stream().toList())
                         .isRead(notificationEntity.isReady())
                         .createdAt(notificationEntity.getCreatedAt())
                         .build())

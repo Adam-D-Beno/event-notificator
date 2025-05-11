@@ -3,6 +3,9 @@ package org.das.eventnotificator.controller;
 import lombok.RequiredArgsConstructor;
 import org.das.eventnotificator.dto.NotificationResponse;
 import org.das.eventnotificator.dto.NotificationRequest;
+import org.das.eventnotificator.model.EventChangeKafkaMessage;
+import org.das.eventnotificator.model.EventFieldGeneric;
+import org.das.eventnotificator.model.EventStatus;
 import org.das.eventnotificator.model.Notification;
 import org.das.eventnotificator.service.NotificationsService;
 import org.slf4j.Logger;
@@ -10,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -46,9 +51,29 @@ public class NotificationController {
     ) {
         log.info("POST request Set All Notifications As Read");
         boolean res = notificationsService.markAllUserNotificationRead(notificationRequest);
-        if (res) {
-            return ResponseEntity.noContent().build();
+        if (!res) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<Void> test() {
+        EventChangeKafkaMessage changeKafkaMessage = EventChangeKafkaMessage.builder()
+                .eventId(1L)
+                .modifierById(1L)
+                .ownerEventId(1L)
+                .name(new EventFieldGeneric<>("oldName", "newName"))
+                .maxPlaces(new EventFieldGeneric<>(10, 20))
+                .date(new EventFieldGeneric<>(LocalDateTime.now(), LocalDateTime.now()))
+                .cost(new EventFieldGeneric<>(BigDecimal.ONE, BigDecimal.TEN))
+                .duration(new EventFieldGeneric<>(10, 60))
+                .locationId(new EventFieldGeneric<>(8L, 10L))
+                .status(new EventFieldGeneric<>(EventStatus.WAIT_START, EventStatus.STARTED))
+                .registrationsOnEvent(List.of(1L, 2L, 3L))
+                .build();
+        notificationsService.save(changeKafkaMessage);
+        return ResponseEntity.noContent().build();
+    }
+
 }
