@@ -19,7 +19,6 @@ public class KafkaEventConsumerService {
     public void listenChangeEvents(ConsumerRecord<Long, EventChangeKafkaMessage> eventChangeRecord) {
         log.info("Get event change from kafka: eventChange={}, topic={}, partition={}",
                 eventChangeRecord.value(), eventChangeRecord.topic(), eventChangeRecord.partition());
-        //todo how can check
         notificationService.save(eventChangeRecord.value());
     }
 }
