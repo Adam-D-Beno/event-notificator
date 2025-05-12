@@ -22,17 +22,13 @@ public class SchedulerNotificationService {
 
     private static final Logger log = LoggerFactory.getLogger(SchedulerNotificationService.class);
     private final NotificationService notificationService;
+    private static final int RETENTION_DAYS = 7;
 
 
-    @Scheduled(cron = "0 */1 * * * *")
-    @Transactional
+    @Scheduled(cron = "0 */10 * * * *")
     public void removeOldNotification() {
         log.info("Scheduled delete notification started");
-//        notificationService.deleteNotificationByMoreDays(7);
-        List<Long> notificationsId = notificationService.findNotificationsByMoreDays(7);
-        notificationService.deleteRegistrationsByNotificationIds(notificationsId);
-        notificationService.deleteFieldsChangeByNotificationIds(notificationsId);
-        notificationService.deleteNotificationByIds(notificationsId);
-        log.info("Scheduled delete notification end. res={}");
+        List<Long> notificationIds= notificationService.deleteNotificationByMoreDays(RETENTION_DAYS);
+        log.info("Scheduled delete notification Ids={}", notificationIds);
     }
 }
