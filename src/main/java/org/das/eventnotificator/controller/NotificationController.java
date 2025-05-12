@@ -55,7 +55,7 @@ public class NotificationController {
             @AuthenticationPrincipal CustomUserDetail authUser
     ) {
         log.info("POST request Set All Notifications As Read");
-       notificationService.markAllUserNotificationRead(notificationRequest, authUser);
+        notificationService.markAllUserNotificationRead(notificationRequest, authUser);
         return ResponseEntity.noContent().build();
     }
 

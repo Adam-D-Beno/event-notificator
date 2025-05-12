@@ -53,33 +53,14 @@ public class NotificationService {
                 authUser.getId()
         );
         if (res == 0) {
+            log.error("exception. Bad request");
             throw new IllegalArgumentException("Bad request");
         }
     }
 
-    public void deleteNotificationByMoreDays(int days) {
+    public List<Long> deleteNotificationByMoreDays(int days) {
         log.info("Begin delete notification More Days={}", days);
-        notificationRepository.deleteNotificationByDate(days);
-    }
-
-    public void deleteNotificationByIds(List<Long> notificationIds) {
-        log.info("Begin delete by Notification Ids={}", notificationIds);
-        notificationRepository.deleteNotificationByIds(notificationIds);
-    }
-
-    public void deleteRegistrationsByNotificationIds(List<Long> notificationIds) {
-        log.info("Begin delete Registrations by Notification Ids={}", notificationIds);
-        notificationRepository.deleteRegistrationsByNotificationIds(notificationIds);
-    }
-
-    public void deleteFieldsChangeByNotificationIds(List<Long> notificationIds) {
-        log.info("Begin delete  fieldsChange by Notification Ids={}", notificationIds);
-        notificationRepository.deleteFieldsChangeByNotificationIds(notificationIds);
-    }
-
-    public List<Long> findNotificationsByMoreDays(int days) {
-        log.info("Begin find notifications More Days={}", days);
-        return notificationRepository.findAllNotificationByMoreDays(days);
+        return notificationRepository.deleteNotificationByDate(days);
     }
 
     private NotificationEntity mapperToNotificationEntity(EventChangeKafkaMessage kafkaMessage) {
@@ -121,6 +102,7 @@ public class NotificationService {
                                         .name(notificationEntity.getFieldsChange().getName())
                                         .maxPlaces(notificationEntity.getFieldsChange().getMaxPlaces())
                                         .date(notificationEntity.getFieldsChange().getDate())
+                                        .cost(notificationEntity.getFieldsChange().getCost())
                                         .duration(notificationEntity.getFieldsChange().getDuration())
                                         .locationId(notificationEntity.getFieldsChange().getLocationId())
                                         .status(notificationEntity.getFieldsChange().getStatus())
