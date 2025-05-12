@@ -33,4 +33,42 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
             @Param("notificationIds") List<Long> notificationIds,
             @Param("userId") Long userId
     );
+
+    @Transactional
+    @Modifying
+    @Query(value = """
+        delete from event_notificator.public.notification en
+            where en.created_at + INTERVAL '1 Day' * :days < CURRENT_TIMESTAMP
+    """, nativeQuery = true)
+    void deleteNotificationByDate(@Param("days") int days);
+
+    @Transactional
+    @Modifying
+    @Query(value = """
+        delete from event_notificator.public.notification en
+        where en.id in :notificationIds
+    """, nativeQuery = true)
+    void deleteNotificationByIds(@Param("notificationIds") List<Long> notificationIds);
+
+    @Transactional
+    @Modifying
+    @Query(value = """
+        delete from event_notificator.public.event_registrations en
+            where en.notification_id in :notificationIds
+    """, nativeQuery = true)
+    void deleteRegistrationsByNotificationIds(@Param("notificationIds") List<Long> notificationIds);
+
+    @Transactional
+    @Modifying
+    @Query(value = """
+        delete from event_notificator.public.fields_change en
+            where en.notification_id in :notificationIds
+    """, nativeQuery = true)
+    void deleteFieldsChangeByNotificationIds(@Param("notificationIds") List<Long> notificationIds);
+
+    @Query(value = """
+        select en.id from event_notificator.public.notification en
+            where en.created_at + INTERVAL '1 Day' * :days < CURRENT_TIMESTAMP
+    """, nativeQuery = true)
+    List<Long> findAllNotificationByMoreDays(@Param("days") int days);
 }

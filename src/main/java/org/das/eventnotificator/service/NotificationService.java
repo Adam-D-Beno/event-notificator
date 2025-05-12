@@ -21,9 +21,9 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class NotificationsService {
+public class NotificationService {
 
-    private static final Logger log = LoggerFactory.getLogger(NotificationsService.class);
+    private static final Logger log = LoggerFactory.getLogger(NotificationService.class);
     private final NotificationRepository notificationRepository;
     private final EventFieldsChangeRepository  eventFieldsChangeRepository;
 
@@ -31,7 +31,8 @@ public class NotificationsService {
     public void save(EventChangeKafkaMessage kafkaMessage) {
         log.info("Begin to save notificationEntity");
         NotificationEntity entityToSave = mapperToNotificationEntity(kafkaMessage);
-        eventFieldsChangeRepository.save(entityToSave.getEventFieldsChangeEntity());
+        entityToSave.setToFieldsChange();
+        eventFieldsChangeRepository.save(entityToSave.getFieldsChange());
         notificationRepository.save(entityToSave);
         log.info("Saved kafka message in DB");
     }
@@ -43,15 +44,42 @@ public class NotificationsService {
         return mapperToNotification(notificationsEntity);
     }
 
-    public boolean markAllUserNotificationRead(
+    public void markAllUserNotificationRead(
             NotificationRequest notificationRequest,
             CustomUserDetail authUser
     ) {
-        //todo throw 404
-        return notificationRepository.markNotificationAsRead(
+        int res = notificationRepository.markNotificationAsRead(
                 notificationRequest.notificationIds(),
                 authUser.getId()
-                ) > 0;
+        );
+        if (res == 0) {
+            throw new IllegalArgumentException("Bad request");
+        }
+    }
+
+    public void deleteNotificationByMoreDays(int days) {
+        log.info("Begin delete notification More Days={}", days);
+        notificationRepository.deleteNotificationByDate(days);
+    }
+
+    public void deleteNotificationByIds(List<Long> notificationIds) {
+        log.info("Begin delete by Notification Ids={}", notificationIds);
+        notificationRepository.deleteNotificationByIds(notificationIds);
+    }
+
+    public void deleteRegistrationsByNotificationIds(List<Long> notificationIds) {
+        log.info("Begin delete Registrations by Notification Ids={}", notificationIds);
+        notificationRepository.deleteRegistrationsByNotificationIds(notificationIds);
+    }
+
+    public void deleteFieldsChangeByNotificationIds(List<Long> notificationIds) {
+        log.info("Begin delete  fieldsChange by Notification Ids={}", notificationIds);
+        notificationRepository.deleteFieldsChangeByNotificationIds(notificationIds);
+    }
+
+    public List<Long> findNotificationsByMoreDays(int days) {
+        log.info("Begin find notifications More Days={}", days);
+        return notificationRepository.findAllNotificationByMoreDays(days);
     }
 
     private NotificationEntity mapperToNotificationEntity(EventChangeKafkaMessage kafkaMessage) {
@@ -60,7 +88,7 @@ public class NotificationsService {
                 .eventId(kafkaMessage.eventId())
                 .modifierById(kafkaMessage.modifierById())
                 .ownerEventId(kafkaMessage.ownerEventId())
-                .eventFieldsChangeEntity(
+                .fieldsChange(
                         EventFieldsChangeEntity.builder()
                                 .name(kafkaMessage.name())
                                 .maxPlaces(kafkaMessage.maxPlaces())
@@ -75,6 +103,7 @@ public class NotificationsService {
                 .isReady(false)
                 .createdAt(LocalDateTime.now())
                 .build();
+
     }
 
     private List<Notification> mapperToNotification(List<NotificationEntity> notificationsEntity) {
@@ -89,13 +118,12 @@ public class NotificationsService {
                         .ownerEventId(notificationEntity.getOwnerEventId())
                         .eventFieldsChange(
                                 EventFieldsChange.builder()
-                                        .name(notificationEntity.getEventFieldsChangeEntity().getName())
-                                        .maxPlaces(notificationEntity.getEventFieldsChangeEntity().getMaxPlaces())
-                                        .date(notificationEntity.getEventFieldsChangeEntity().getDate())
-                                        .cost(notificationEntity.getEventFieldsChangeEntity().getCost())
-                                        .duration(notificationEntity.getEventFieldsChangeEntity().getDuration())
-                                        .locationId(notificationEntity.getEventFieldsChangeEntity().getLocationId())
-                                        .status(notificationEntity.getEventFieldsChangeEntity().getStatus())
+                                        .name(notificationEntity.getFieldsChange().getName())
+                                        .maxPlaces(notificationEntity.getFieldsChange().getMaxPlaces())
+                                        .date(notificationEntity.getFieldsChange().getDate())
+                                        .duration(notificationEntity.getFieldsChange().getDuration())
+                                        .locationId(notificationEntity.getFieldsChange().getLocationId())
+                                        .status(notificationEntity.getFieldsChange().getStatus())
                                         .build()
                         )
                         .registrationsOnEvent(notificationEntity.getRegistrations().stream().toList())
