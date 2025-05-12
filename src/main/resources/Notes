@@ -3,3 +3,9 @@
 2. Error Handling: Обработка ошибок и управление исключениями при работе с Kafka.
 
 3. при вставке таблицы registrations_on_event делает 3 запроса отдельный
+
+
+
+
+foreignKeyDefinition = "FOREIGN KEY (notification_id) REFERENCES notification(id) " +
+                       "ON DELETE CASCADE"
