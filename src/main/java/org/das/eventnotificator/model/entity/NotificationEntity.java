@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -30,14 +29,17 @@ public class NotificationEntity {
     @Column(name = "owner_event_id", nullable = false)
     private Long ownerEventId;
 
-    @OneToOne
-    @JoinColumn(name = "fields_Change_id")
-    private EventFieldsChangeEntity eventFieldsChangeEntity;
+    @OneToOne(mappedBy = "notification", cascade = CascadeType.REMOVE)
+    private EventFieldsChangeEntity fieldsChange;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "event_registrations",
             joinColumns = @JoinColumn(name = "notification_id"),
-            foreignKey = @ForeignKey(name = "fk_notification"))
+            foreignKey = @ForeignKey(
+                name = "fk_notification",
+                foreignKeyDefinition = "FOREIGN KEY (notification_id) REFERENCES notification(id) " +
+                            "ON DELETE CASCADE"
+            ))
     private Set<Long> registrations = new HashSet<>();
 
     @Column(name = "is_ready", nullable = false)
@@ -45,4 +47,10 @@ public class NotificationEntity {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    public void setToFieldsChange() {
+         if (this.fieldsChange.getNotification() != this) {
+             this.getFieldsChange().setNotification(this);
+         }
+    }
 }
