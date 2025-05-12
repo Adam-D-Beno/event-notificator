@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class KafkaEventConsumerService {
-    private final NotificationsService notificationsService;
+    private final NotificationService notificationService;
 
     private static final Logger log = LoggerFactory.getLogger(KafkaEventConsumerService.class);
 
@@ -20,6 +20,6 @@ public class KafkaEventConsumerService {
         log.info("Get event change from kafka: eventChange={}, topic={}, partition={}",
                 eventChangeRecord.value(), eventChangeRecord.topic(), eventChangeRecord.partition());
         //todo how can check
-        notificationsService.save(eventChangeRecord.value());
+        notificationService.save(eventChangeRecord.value());
     }
 }
