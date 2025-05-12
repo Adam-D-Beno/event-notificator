@@ -69,4 +69,8 @@ public class EventFieldsChangeEntity {
     })
     @Enumerated(EnumType.STRING)
     private EventFieldGeneric<EventStatus> status;
+
+    @OneToOne(cascade = CascadeType.REMOVE)
+    private NotificationEntity notification;
+
 }
