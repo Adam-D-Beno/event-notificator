@@ -1,5 +1,6 @@
 package org.das.eventnotificator.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.das.eventnotificator.dto.NotificationRequest;
 import org.das.eventnotificator.model.EventChangeKafkaMessage;
@@ -53,8 +54,8 @@ public class NotificationService {
                 authUser.getId()
         );
         if (res == 0) {
-            log.error("exception. Bad request");
-            throw new IllegalArgumentException("Bad request");
+            log.error("Entity Not Found Exception");
+            throw new EntityNotFoundException("No such Element found");
         }
     }
 
@@ -64,7 +65,7 @@ public class NotificationService {
     }
 
     private NotificationEntity mapperToNotificationEntity(EventChangeKafkaMessage kafkaMessage) {
-        log.info("Begin mapping kafkaMessage={} to NotificationEntity", kafkaMessage);
+        log.info("Begin mapping entity to kafkaMessage={} to NotificationEntity", kafkaMessage);
         return NotificationEntity.builder()
                 .eventId(kafkaMessage.eventId())
                 .modifierById(kafkaMessage.modifierById())

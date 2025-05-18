@@ -85,7 +85,9 @@ services:
           done &&
           kafka-topics --create --topic change-event-topic --partitions 3 --replication-factor 3 --if-not-exists --bootstrap-server kafka1:9092 &&
           kafka-configs --alter --entity-type topics --entity-name change-event-topic --add-config min.insync.replicas=2 --bootstrap-server kafka1:9092
-        "
+          kafka-topics --create --topic change-event-topic.DLT --partitions 3 --replication-factor 3 --if-not-exists --bootstrap-server kafka1:9092 &&
+          kafka-configs --alter --entity-type topics --entity-name change-event-topic.DLT --add-config min.insync.replicas=2 --bootstrap-server kafka1:9092
+          "  
 
   kafdrop:
       image: obsidiandynamics/kafdrop:latest

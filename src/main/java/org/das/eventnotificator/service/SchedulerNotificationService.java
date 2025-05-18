@@ -25,7 +25,7 @@ public class SchedulerNotificationService {
     private static final int RETENTION_DAYS = 7;
 
 
-    @Scheduled(cron = "0 */10 * * * *")
+    @Scheduled(cron = "${notification.cron}")
     public void removeOldNotification() {
         log.info("Scheduled delete notification started");
         List<Long> notificationIds= notificationService.deleteNotificationByMoreDays(RETENTION_DAYS);
