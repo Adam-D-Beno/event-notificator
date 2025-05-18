@@ -19,11 +19,13 @@ public class KafkaEventConsumerService {
 
     @KafkaListener(topics = "change-event-topic", containerFactory = "containerFactory")
     public void listenChangeEvents(
-            ConsumerRecord<Long, EventChangeKafkaMessage> eventChangeRecord
+            ConsumerRecord<Long, EventChangeKafkaMessage> eventChangeRecord,
+            Acknowledgment acknowledgment
     ) {
         log.info("Begin Receive event change from kafka: eventChange={}, topic={}, partition={}",
         eventChangeRecord.value(), eventChangeRecord.topic(), eventChangeRecord.partition());
         notificationService.save(eventChangeRecord.value());
+        acknowledgment.acknowledge();
         log.info("Received event change from kafka: eventChange={}, topic={}, partition={}",
                     eventChangeRecord.value(), eventChangeRecord.topic(), eventChangeRecord.partition());
 //        try {
