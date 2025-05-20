@@ -28,13 +28,5 @@ public class KafkaEventConsumerService {
         acknowledgment.acknowledge();
         log.info("Received event change from kafka: eventChange={}, topic={}, partition={}",
                     eventChangeRecord.value(), eventChangeRecord.topic(), eventChangeRecord.partition());
-//        try {
-//            notificationService.save(eventChangeRecord.value());
-//            acknowledgment.acknowledge();
-//            log.info("Received event change from kafka: eventChange={}, topic={}, partition={}",
-//                    eventChangeRecord.value(), eventChangeRecord.topic(), eventChangeRecord.partition());
-//        } catch (Exception e) {
-//            log.error("Failed to process message [Key: {}]. Error: {}", eventChangeRecord.key(), e.getMessage());
-//        }
     }
 }
