@@ -7,7 +7,7 @@ import org.das.eventnotificator.model.EventChangeKafkaMessage;
 import org.das.eventnotificator.model.EventFieldGeneric;
 import org.das.eventnotificator.model.EventStatus;
 import org.das.eventnotificator.model.Notification;
-import org.das.eventnotificator.security.jwt.CustomUserDetail;
+import org.das.eventnotificator.security.CustomUserDetail;
 import org.das.eventnotificator.service.NotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

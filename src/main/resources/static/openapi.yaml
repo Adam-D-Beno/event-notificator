@@ -6,14 +6,15 @@ info:
 
 servers:
   - url: http://localhost:8082
-
+security:
+  - BearerAuth: []
 tags:
   - name: Notifications
 
 paths:
   /notifications:
     get:
-      summary: Получить все непрочитанные нотификации пользователя. Allowed roles=[ADMIN, USER]
+      summary: ПоC:\Users\ПК\IdeaProjects\pavel_corokin\EventNotificator\event-notificator\src\main\resources\staticлучить все непрочитанные нотификации пользователя. Allowed roles=[ADMIN, USER]
       description: Получить все нотификации пользователя.
         ID пользователя и его роль должна извлекаться из JWT токена.
         JWT токен выдается другим сервисом - сервисом event-manager.
@@ -255,7 +256,7 @@ components:
             dateTime: "2024-12-03T10:15:30"
 
   securitySchemes:
-    bearerAuth:
+    BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT

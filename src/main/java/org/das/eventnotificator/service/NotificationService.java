@@ -10,7 +10,7 @@ import org.das.eventnotificator.model.entity.EventFieldsChangeEntity;
 import org.das.eventnotificator.model.entity.NotificationEntity;
 import org.das.eventnotificator.repository.EventFieldsChangeRepository;
 import org.das.eventnotificator.repository.NotificationRepository;
-import org.das.eventnotificator.security.jwt.CustomUserDetail;
+import org.das.eventnotificator.security.CustomUserDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
