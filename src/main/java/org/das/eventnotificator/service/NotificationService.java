@@ -1,5 +1,6 @@
 package org.das.eventnotificator.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.das.eventnotificator.dto.NotificationRequest;
 import org.das.eventnotificator.model.EventChangeKafkaMessage;
@@ -9,7 +10,7 @@ import org.das.eventnotificator.model.entity.EventFieldsChangeEntity;
 import org.das.eventnotificator.model.entity.NotificationEntity;
 import org.das.eventnotificator.repository.EventFieldsChangeRepository;
 import org.das.eventnotificator.repository.NotificationRepository;
-import org.das.eventnotificator.security.jwt.CustomUserDetail;
+import org.das.eventnotificator.security.CustomUserDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -53,37 +54,18 @@ public class NotificationService {
                 authUser.getId()
         );
         if (res == 0) {
-            throw new IllegalArgumentException("Bad request");
+            log.error("Entity Not Found Exception");
+            throw new EntityNotFoundException("No such Element found");
         }
     }
 
-    public void deleteNotificationByMoreDays(int days) {
+    public List<Long> deleteNotificationByMoreDays(int days) {
         log.info("Begin delete notification More Days={}", days);
-        notificationRepository.deleteNotificationByDate(days);
-    }
-
-    public void deleteNotificationByIds(List<Long> notificationIds) {
-        log.info("Begin delete by Notification Ids={}", notificationIds);
-        notificationRepository.deleteNotificationByIds(notificationIds);
-    }
-
-    public void deleteRegistrationsByNotificationIds(List<Long> notificationIds) {
-        log.info("Begin delete Registrations by Notification Ids={}", notificationIds);
-        notificationRepository.deleteRegistrationsByNotificationIds(notificationIds);
-    }
-
-    public void deleteFieldsChangeByNotificationIds(List<Long> notificationIds) {
-        log.info("Begin delete  fieldsChange by Notification Ids={}", notificationIds);
-        notificationRepository.deleteFieldsChangeByNotificationIds(notificationIds);
-    }
-
-    public List<Long> findNotificationsByMoreDays(int days) {
-        log.info("Begin find notifications More Days={}", days);
-        return notificationRepository.findAllNotificationByMoreDays(days);
+        return notificationRepository.deleteNotificationByDate(days);
     }
 
     private NotificationEntity mapperToNotificationEntity(EventChangeKafkaMessage kafkaMessage) {
-        log.info("Begin mapping kafkaMessage={} to NotificationEntity", kafkaMessage);
+        log.info("Begin mapping entity to kafkaMessage={} to NotificationEntity", kafkaMessage);
         return NotificationEntity.builder()
                 .eventId(kafkaMessage.eventId())
                 .modifierById(kafkaMessage.modifierById())
@@ -121,6 +103,7 @@ public class NotificationService {
                                         .name(notificationEntity.getFieldsChange().getName())
                                         .maxPlaces(notificationEntity.getFieldsChange().getMaxPlaces())
                                         .date(notificationEntity.getFieldsChange().getDate())
+                                        .cost(notificationEntity.getFieldsChange().getCost())
                                         .duration(notificationEntity.getFieldsChange().getDuration())
                                         .locationId(notificationEntity.getFieldsChange().getLocationId())
                                         .status(notificationEntity.getFieldsChange().getStatus())

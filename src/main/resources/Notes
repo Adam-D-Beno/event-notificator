@@ -6,6 +6,31 @@
 
 
 
+@Bean
+    public ProducerFactory<Long, Object> producerFactory() {
+        Map<String, Object> configProps = new HashMap<>();
+        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:19092,localhost:19093,localhost:19094");
+        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class);
+        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        configProps.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
+        return new DefaultKafkaProducerFactory<>(configProps);
+    }
 
-foreignKeyDefinition = "FOREIGN KEY (notification_id) REFERENCES notification(id) " +
-                       "ON DELETE CASCADE"
+ @Bean
+     public KafkaTemplate<Long, Object> kafkaTemplate(
+             ProducerFactory<Long, Object> producerFactory
+    ) {
+        return new KafkaTemplate<>(producerFactory);
+    }
+
+
+
+    DeadLetterPublishingRecoverer publishingRecoverer = new DeadLetterPublishingRecoverer(
+                        kafkaTemplate, (record, ex) ->
+                        new TopicPartition("change-event-topic.DLT", record.partition())
+                );
+    DefaultErrorHandler errorHandler = new DefaultErrorHandler(
+                   publishingRecoverer,
+                   new FixedBackOff(1000L, 3)
+           );
+               containerFactory.setCommonErrorHandler(errorHandler);

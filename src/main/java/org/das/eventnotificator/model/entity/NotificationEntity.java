@@ -29,7 +29,7 @@ public class NotificationEntity {
     @Column(name = "owner_event_id", nullable = false)
     private Long ownerEventId;
 
-    @OneToOne(mappedBy = "notification", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "notification",cascade = CascadeType.REMOVE)
     private EventFieldsChangeEntity fieldsChange;
 
     @ElementCollection(fetch = FetchType.LAZY)
@@ -37,8 +37,7 @@ public class NotificationEntity {
             joinColumns = @JoinColumn(name = "notification_id"),
             foreignKey = @ForeignKey(
                 name = "fk_notification",
-                foreignKeyDefinition = "FOREIGN KEY (notification_id) REFERENCES notification(id) " +
-                            "ON DELETE CASCADE"
+                foreignKeyDefinition = "FOREIGN KEY (notification_id) REFERENCES notification(id) ON DELETE CASCADE"
             ))
     private Set<Long> registrations = new HashSet<>();
 

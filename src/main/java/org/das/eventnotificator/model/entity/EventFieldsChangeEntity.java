@@ -20,6 +20,14 @@ public class EventFieldsChangeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne()
+    @JoinColumn(name = "notification_id",
+            foreignKey = @ForeignKey(
+              name = "fk_notification",
+              foreignKeyDefinition = "FOREIGN KEY (notification_id) REFERENCES notification(id) ON DELETE CASCADE"
+            ))
+    private NotificationEntity notification;
+
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "oldValue", column = @Column(name = "old_name")),
@@ -69,8 +77,4 @@ public class EventFieldsChangeEntity {
     })
     @Enumerated(EnumType.STRING)
     private EventFieldGeneric<EventStatus> status;
-
-    @OneToOne(cascade = CascadeType.REMOVE)
-    private NotificationEntity notification;
-
 }
