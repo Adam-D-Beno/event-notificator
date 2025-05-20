@@ -3,9 +3,6 @@ package org.das.eventnotificator.controller;
 import lombok.RequiredArgsConstructor;
 import org.das.eventnotificator.dto.NotificationResponse;
 import org.das.eventnotificator.dto.NotificationRequest;
-import org.das.eventnotificator.model.EventChangeKafkaMessage;
-import org.das.eventnotificator.model.EventFieldGeneric;
-import org.das.eventnotificator.model.EventStatus;
 import org.das.eventnotificator.model.Notification;
 import org.das.eventnotificator.security.CustomUserDetail;
 import org.das.eventnotificator.service.NotificationService;
@@ -14,9 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
